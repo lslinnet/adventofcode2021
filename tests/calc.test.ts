@@ -1,6 +1,6 @@
 import calc from '../src/calc';
 
-describe('Caclc', () => {
+describe('Calc', () => {
     test('should return 10 for add(6, 4)', () => {
         expect(calc.add(6,4)).toBe(10);
     });
