@@ -2,10 +2,11 @@ import type { Arguments, CommandBuilder } from "yargs";
 import yargs from "yargs";
 import fs from "fs";
 import day1 from '../days/day1';
+import day2 from '../days/day2';
 
 type Options = {
   day: number;
-  alternative: boolean | undefined;
+  part: number | undefined;
 };
 
 export const command: string = "day <day>";
@@ -14,30 +15,38 @@ export const desc: string = "Run Advent Of Code for a given <day> day";
 export const builder: CommandBuilder<Options, Options> = (yargs) =>
   yargs
     .options({
-      alternative: { type: "boolean" },
+      part: { type: "number" },
     })
     .positional("day", { type: "number", demandOption: true });
 
 export const handler = (argv: Arguments<Options>): void => {
-  const { day, alternative } = argv;
+  const { day, part } = argv;
 
-  let alt = false;
-  if (alternative !== undefined && alternative) {
-    alt = true;
+  let p = 1;
+  if (part !== undefined && part) {
+    p = part;
   }
 
   try {
-    const data = fs.readFileSync(`data/day${day}${!alt ? "a" : "b"}`, "utf8");
+    const data = fs.readFileSync(`data/day${day}`, "utf8");
 
     if (data) {
-      process.stdout.write("Data loaded...\n");
+      process.stdout.write(`Data loaded for ${day}...\n`);
+      let result = 0;
+      switch (day) {
+        case 1:
+          result = (p == 1) ? day1.first(data) : day1.second(data);
+          break;
+        case 2:
+          result = (p == 1) ? day2.first(data) : day2.second(data);
+          break;
+        default:
+          process.stdout.write("No day included");
+          break;
+      }
+      process.stdout.write(`Result for Day${day} Part ${(p == 1) ? 'One' : 'Two'}: ${result}`);
 
-      if (!alt) {
-        process.stdout.write("Result for Day1 variant a: " + day1.first(data));
-      }
-      else {
-        process.stdout.write("Result for Day1 variant b: " + day1.second(data));
-      }
+
 
       process.stdout.write("\n");
     }
@@ -45,6 +54,6 @@ export const handler = (argv: Arguments<Options>): void => {
     console.error(err);
   }
 
-  process.stdout.write(`Done executing day ${day} and alternative being ${alt}!`);
+  process.stdout.write(`Done executing day ${day} and Part ${p}!`);
   process.exit(0);
 };
