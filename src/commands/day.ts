@@ -3,6 +3,7 @@ import yargs from "yargs";
 import fs from "fs";
 import day1 from '../days/day1';
 import day2 from '../days/day2';
+import day3 from '../days/day3';
 
 type Options = {
   day: number;
@@ -39,6 +40,9 @@ export const handler = (argv: Arguments<Options>): void => {
           break;
         case 2:
           result = (p == 1) ? day2.first(data) : day2.second(data);
+          break;
+        case 3:
+          result = (p == 1) ? day3.first(data) : day3.second(data);
           break;
         default:
           process.stdout.write("No day included");
